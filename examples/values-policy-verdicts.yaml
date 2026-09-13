@@ -25,6 +25,17 @@ fieldMask:                                # what a "which policy decided" panel 
   - egress_denied_by
   - event_type
   - node_name
+# The relay: the SAME settings as your first release (review finding — the chart's defaults are port 80 without
+# TLS, which a relay that requires mutual TLS refuses). Shown here as the enterprise setup the fork's docs describe:
+hubbleRelay:
+  serviceName: hubble-relay
+  namespace: kube-system
+  port: "443"
+  tls:
+    enabled: true
+    serverName: hubble.hubble-relay.cilium.io
+    ca: {secretName: hubble-observer-relay-certs}                     # the relay's CA (cert-manager wrote it)
+    client: {enabled: true, secretName: hubble-observer-relay-certs}  # this pod's own client certificate
 cf2cnp:
   enabled: false                          # one cf2cnp per cluster is enough (the first release's)
 grafanaDashboard:
