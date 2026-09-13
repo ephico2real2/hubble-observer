@@ -5,6 +5,7 @@
 # Measured on a Cilium 1.20.1 worker: 5.6 % of all events (3.3/s of 59/s) — the stream is cheap where "all flows"
 # is not. In Loki: `{container="hubble-observer-verdicts"} | json allowed_by="flow.ingress_allowed_by[0].name"`.
 fullnameOverride: hubble-observer-verdicts
+containerName: hubble-observer-verdicts   # its own `container` label in Loki (measured: with the chart's default both releases shared {container="hubble-observer"})
 image:                                    # the Hubble CLI inside the Cilium agent image: --field-mask exists there (1.20.1);
   repository: quay.io/cilium/cilium       # the chart's default quay.io/cilium/hubble:v1.16.4 has no such flag and the pod
   tag: "v1.20.1"                          # would crash-loop (review finding; measured in the PoC's demo 25 Part 7b)
