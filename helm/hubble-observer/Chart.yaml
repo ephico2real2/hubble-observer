@@ -30,6 +30,6 @@ dependencies:
   # metric enabled on the agents (see https://github.com/ephico2real2/hubble-policy-verdicts).
   - name: hubble-policy-verdicts
     alias: policyVerdictsDashboard
-    version: "0.1.0"
+    version: "0.1.1"
     repository: https://ephico2real2.github.io/hubble-policy-verdicts
     condition: policyVerdictsDashboard.enabled
