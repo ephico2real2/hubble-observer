@@ -2,7 +2,7 @@ apiVersion: v2
 name: hubble-observer
 description: A Helm chart for Hubble Observer - A small observability component that monitors network flows within Cilium.
 type: application
-version: 2.6.0-alpha
+version: 2.7.0
 appVersion: "1.16.4"
 keywords:
   - networking
@@ -32,15 +32,9 @@ dependencies:
     version: "0.7.0"
     repository: https://ephico2real2.github.io/cf2cnp
     condition: cf2cnp.enabled
-  # The Hubble / Policy Verdicts (Namespace) dashboard — audited / forwarded / dropped per namespace from Hubble's `policy`
-  # metric — as an optional companion to the Cilium Flows dashboard this chart ships. Off by default; needs the policy
-  # metric enabled on the agents (see https://github.com/ephico2real2/hubble-policy-verdicts). 0.2.0 adds the optional Loki
-  # flow row (lokiRow.enabled) with the cf2cnp Generate action, so a verdict becomes a policy on one dashboard; 0.2.1 lets
-  # the namespace filter choose its side (destination or source), so egress drops leaving the namespace are on the page;
-  # 0.2.2 drops the PoC wording from the panels and counts audited source → destination pairs; 0.3.0 / 0.4.0 add the
-  # namespace's whole traffic around the verdicts — flows, drops of every reason, connection health, DNS, HTTP — as
-  # numbered sections with a tile line each, re-homed from Cilium's namespace dashboards on this page's filter and
-  # reviewed (replies matched by identity and namespace, a sender with no reply counted in full).
+  # Optional companion dashboard: Hubble / Policy Verdicts (Namespace) — audited / forwarded / dropped per namespace from
+  # Hubble's `policy` metric, the "observe first, then enforce" picture for the policies generated from these flows.
+  # Off by default; needs the policy metric enabled on the agents: https://github.com/ephico2real2/hubble-policy-verdicts
   - name: hubble-policy-verdicts
     alias: policyVerdictsDashboard
     version: "0.4.0"

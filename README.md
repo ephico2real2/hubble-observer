@@ -45,8 +45,8 @@ helm upgrade --install hubble-observer oci://ghcr.io/onzack/helm-charts/hubble-o
 
 See `values.yaml` for configuration options.
 
-`ciliumNetworkPolicy.enabled=true` renders a policy that allows the observer egress to Hubble Relay on the relay pod's listen port (`ciliumNetworkPolicy.relayPort`, default `4245` — Cilium enforces egress policy on the backend pod's port, not the Service port) and, by default, to the cluster DNS (`ciliumNetworkPolicy.dns`, needed because the relay is reached by name); point `dns.namespace` / `dns.matchLabels` at your DNS pods if they are not `kube-system` / `k8s-app=kube-dns`.
 `fieldMask` keeps only the listed flow fields (`hubble observe --field-mask`): Hubble Relay strips the rest before sending, so the stream, the pod log and Loki all shrink — `values.yaml` carries the smallest mask that still feeds every dashboard panel (~35% fewer bytes per flow, measured), plus `is_reply`, which no panel reads but a policy generator does: cf2cnp refuses a reply flow by that field ("this is a reply packet - you need to allow the original request"), and the same flow with the field masked away generated `Allow ingress to shop/frontend … from shop/backend on TCP/54468` — a rule for the reply's direction on an ephemeral port (measured with cf2cnp 0.7.0 on a recorded HTTP response flow). Keep `is_reply` in any mask whose flows feed a generator. `extraArgs` appends further `hubble observe` flags verbatim.
+`ciliumNetworkPolicy.enabled=true` renders a policy that allows the observer egress to Hubble Relay on the relay pod's listen port (`ciliumNetworkPolicy.relayPort`, default `4245` — Cilium enforces egress policy on the backend pod's port, not the Service port) and, by default, to the cluster DNS (`ciliumNetworkPolicy.dns`, needed because the relay is reached by name); point `dns.namespace` / `dns.matchLabels` at your DNS pods if they are not `kube-system` / `k8s-app=kube-dns`.
 
 CF2CNP can be exposed via `cf2cnp.ingress` or, with the Gateway API, via `cf2cnp.httpRoute`. The URL the Grafana dashboard uses is taken from the first ingress host or httpRoute hostname.
 
@@ -91,6 +91,20 @@ The CA can also come from a ConfigMap, for example a cluster wide CA bundle, via
 - The certificates are mounted with mode `0400`. When running the container as a non-root user, set `podSecurityContext.fsGroup` so the files stay readable.
 - `hubbleRelay.tls.insecureSkipVerify=true` disables verification of the relay certificate. It is only meant for debugging.
 
+## Optional: the Policy Verdicts dashboard
+
+cf2cnp turns flows into CiliumNetworkPolicies; the [hubble-policy-verdicts](https://github.com/ephico2real2/hubble-policy-verdicts)
+dashboard shows what those policies then do — audited (policy evaluated, not enforced), forwarded (an allow rule
+matched), dropped (enforced) — per namespace and per source → destination, from Hubble's `policy` metric. It is a
+dependency of this chart, off by default:
+
+```yaml
+policyVerdictsDashboard:
+  enabled: true
+  dashboard: {folder: Cilium}
+```
+
+The panels need the `policy` metric enabled on the agents with source/destination contexts (see that chart's README).
 ## A second observer for policy-verdict events
 
 The default observer streams DROPPED flows. Hubble also emits a **policy-verdict** event for every verdict a

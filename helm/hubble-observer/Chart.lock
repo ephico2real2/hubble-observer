@@ -1,9 +1,0 @@
-dependencies:
-- name: cf2cnp
-  repository: https://ephico2real2.github.io/cf2cnp
-  version: 0.7.0
-- name: hubble-policy-verdicts
-  repository: https://ephico2real2.github.io/hubble-policy-verdicts
-  version: 0.4.0
-digest: sha256:60bd2ee063a5fb5a6565693060555735e0ab78cc71b52ce2d4e20d2a0f7fe3e6
-generated: "2026-09-13T16:08:39.856404-05:00"

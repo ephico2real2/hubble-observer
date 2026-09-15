@@ -46,9 +46,7 @@ fieldMask: []
 #   - destination_names
 #   - egress_denied_by
 #   - ingress_denied_by
-#   - is_reply             # not a dashboard field, but the one a policy generator reading these flows (cf2cnp, from the
-#                         # pod log or Loki) uses to refuse replies: without it a reply looks like a request and becomes
-#                         # a rule for the wrong direction on an ephemeral port (measured — see the README)
+#   - is_reply             # not a dashboard field, but the one a policy generator reading these flows (cf2cnp, from the pod log or Loki) uses to refuse replies: without it a reply looks like a request and becomes a rule for the wrong direction on an ephemeral port (measured — see the README)
 
 # Extra arguments appended verbatim to `hubble observe` (e.g. ["--from-cluster", "prod-*"]). Empty by default.
 extraArgs: []
@@ -212,7 +210,7 @@ cf2cnp:
 
   extraManifests: []
 
-# Optional companion dashboard: Hubble / Policy Verdicts (Namespace) — the audit → allow → deny picture of the policies
-# generated from these flows (subchart hubble-policy-verdicts; values pass through: dashboard.folder, sidecar.*, grafanaOperator.*)
+# Optional companion dashboard: Hubble / Policy Verdicts (Namespace). Values pass through to the subchart
+# (dashboard.folder, sidecar.*, grafanaOperator.*); see https://github.com/ephico2real2/hubble-policy-verdicts
 policyVerdictsDashboard:
   enabled: false
