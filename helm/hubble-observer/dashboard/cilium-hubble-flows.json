@@ -371,7 +371,7 @@
             {
               "targetBlank": false,
               "title": "",
-              "url": "/d/${__dashboard.uid}/${__dashboard}?${__url_time_range}&${datasource:queryparam}&${sourcenamespace:queryparam}&${destinationnamespace:queryparam}&${ipversion:queryparam}&${searchregex:queryparam}&${excluderegex:queryparam}&var-direction=${__data.fields.flow_traffic_direction}"
+              "url": "/d/${__dashboard.uid}/${__dashboard}?${__url_time_range}&${datasource:queryparam}&${container:queryparam}&${sourcecluster:queryparam}&${destinationcluster:queryparam}&${sourcenamespace:queryparam}&${destinationnamespace:queryparam}&${ipversion:queryparam}&${searchregex:queryparam}&${excluderegex:queryparam}&var-direction=${__data.fields.flow_traffic_direction}"
             }
           ],
           "mappings": []
@@ -448,7 +448,7 @@
             {
               "targetBlank": false,
               "title": "",
-              "url": "/d/${__dashboard.uid}/${__dashboard}?${__url_time_range}&${datasource:queryparam}&${destinationnamespace:queryparam}&${ipversion:queryparam}&${searchregex:queryparam}&${excluderegex:queryparam}&${direction:queryparam}&var-sourcenamespace=${__data.fields.flow_source_namespace}"
+              "url": "/d/${__dashboard.uid}/${__dashboard}?${__url_time_range}&${datasource:queryparam}&${container:queryparam}&${sourcecluster:queryparam}&${destinationcluster:queryparam}&${destinationnamespace:queryparam}&${ipversion:queryparam}&${searchregex:queryparam}&${excluderegex:queryparam}&${direction:queryparam}&var-sourcenamespace=${__data.fields.flow_source_namespace}"
             }
           ],
           "mappings": []
@@ -528,7 +528,7 @@
             {
               "targetBlank": false,
               "title": "",
-              "url": "/d/${__dashboard.uid}/${__dashboard}?${__url_time_range}&${datasource:queryparam}&${destinationnamespace:queryparam}&${ipversion:queryparam}&${excluderegex:queryparam}&${direction:queryparam}&${sourcenamespace:queryparam}&var-searchregex=${__data.fields.flow_destination_name}"
+              "url": "/d/${__dashboard.uid}/${__dashboard}?${__url_time_range}&${datasource:queryparam}&${container:queryparam}&${sourcecluster:queryparam}&${destinationcluster:queryparam}&${destinationnamespace:queryparam}&${ipversion:queryparam}&${excluderegex:queryparam}&${direction:queryparam}&${sourcenamespace:queryparam}&var-searchregex=${__data.fields.flow_destination_name}"
             }
           ],
           "mappings": []
@@ -1181,7 +1181,7 @@
                   {
                     "targetBlank": true,
                     "title": "Open this Flow UUID in a new tab",
-                    "url": "/d/${__dashboard.uid}/${__dashboard}?${__url_time_range}&viewPanel=3&var-ipversion=$__all&var-searchregex=${__data.fields[\"Flow UUID\"]}"
+                    "url": "/d/${__dashboard.uid}/${__dashboard}?${__url_time_range}&${datasource:queryparam}&${container:queryparam}&viewPanel=3&var-ipversion=$__all&var-searchregex=${__data.fields[\"Flow UUID\"]}"
                   },
                   {
                     "targetBlank": true,
@@ -2080,20 +2080,20 @@
       },
       {
         "current": {
-          "text": "regexp `(?P<message>.+)` | line_format `{{.message}}` | json",
-          "value": "regexp `(?P<message>.+)` | line_format `{{.message}}` | json"
+          "text": "regexp `^(?:(?:\\S+) (?:stdout|stderr) F )?(?P<message>\\{.*\\})$` | line_format `{{.message}}` | json",
+          "value": "regexp `^(?:(?:\\S+) (?:stdout|stderr) F )?(?P<message>\\{.*\\})$` | line_format `{{.message}}` | json"
         },
-        "description": "Parses CRI log lines, extracting timestamp, stream, flags, and message. Only the message part is taken if it matches, then it is parsed as JSON.",
+        "description": "Accepts a pure JSON log line or a complete CRI record (timestamp, stream, the F flag, then the JSON), drops the CRI prefix when present and parses the JSON. CRI partial records (P) must be reassembled by the log shipper.",
         "hide": 2,
         "name": "logparser",
         "options": [
           {
             "selected": true,
-            "text": "regexp `(?P<message>.+)` | line_format `{{.message}}` | json",
-            "value": "regexp `(?P<message>.+)` | line_format `{{.message}}` | json"
+            "text": "regexp `^(?:(?:\\S+) (?:stdout|stderr) F )?(?P<message>\\{.*\\})$` | line_format `{{.message}}` | json",
+            "value": "regexp `^(?:(?:\\S+) (?:stdout|stderr) F )?(?P<message>\\{.*\\})$` | line_format `{{.message}}` | json"
           }
         ],
-        "query": "regexp `(?P<message>.+)` | line_format `{{.message}}` | json",
+        "query": "regexp `^(?:(?:\\S+) (?:stdout|stderr) F )?(?P<message>\\{.*\\})$` | line_format `{{.message}}` | json",
         "type": "textbox"
       },
       {
