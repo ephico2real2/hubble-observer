@@ -11,6 +11,8 @@ The Hubble Observer also includes a Grafana dashboard for visualizing Cilium net
 
 [![Grafana Dashboard Preview](assets/grafanadashboard.png)](https://grafana.com/grafana/dashboards/23862)
 
+**Running-test captures.** This dashboard is rendered on every CI run of a reference Cilium 1.20.1 lab (a two-cluster ClusterMesh on kind) and captured as screenshots — see the [`ci-captures` branch](https://github.com/ephico2real2/cilium-implementation-poc/tree/ci-captures) (newest run first): `grafana-policy-verdicts*.png` (audited / forwarded / dropped), `grafana-hubble-observer-flows.png`, and the `grafana-hubble-*` network / L7 / DNS panels.
+
 ## Prerequisites
 
 Before installing the Hubble Observer, ensure you have the following components installed in your Kubernetes cluster:
