@@ -178,7 +178,7 @@
           },
           "direction": "backward",
           "editorMode": "code",
-          "expr": "sum(\n    count_over_time(\n        {namespace=\"$hubbleobservernamespace\",container=\"hubble-observer\"} |~ `(?i)$searchregex` !~ `(?i)$excluderegex`\n        | $logparser | flow_source_namespace=~\"$sourcenamespace\" | flow_destination_namespace=~\"$destinationnamespace\" | flow_traffic_direction=~\"$direction\" | flow_IP_ipVersion=~\"$ipversion\" \n        | flow_source_cluster_name=~\"$sourcecluster\" | flow_destination_cluster_name=~\"$destinationcluster\"\n    [$__range])\n)",
+          "expr": "sum(\n    count_over_time(\n        {namespace=\"$hubbleobservernamespace\",container=\"$container\"} |~ `(?i)$searchregex` !~ `(?i)$excluderegex`\n        | $logparser | flow_source_namespace=~\"$sourcenamespace\" | flow_destination_namespace=~\"$destinationnamespace\" | flow_traffic_direction=~\"$direction\" | flow_IP_ipVersion=~\"$ipversion\" \n        | flow_source_cluster_name=~\"$sourcecluster\" | flow_destination_cluster_name=~\"$destinationcluster\"\n    [$__range])\n)",
           "legendFormat": "",
           "queryType": "instant",
           "refId": "A"
@@ -338,7 +338,7 @@
           },
           "direction": "backward",
           "editorMode": "code",
-          "expr": "sum by(flow_verdict) (\n    count_over_time(\n        {namespace=\"$hubbleobservernamespace\",container=\"hubble-observer\"} |~ `(?i)$searchregex` !~ `(?i)$excluderegex`\n        | $logparser | flow_source_namespace=~\"$sourcenamespace\" | flow_destination_namespace=~\"$destinationnamespace\" | flow_traffic_direction=~\"$direction\" | flow_IP_ipVersion=~\"$ipversion\"\n        | flow_source_cluster_name=~\"$sourcecluster\" | flow_destination_cluster_name=~\"$destinationcluster\"\n    [$__range])\n)",
+          "expr": "sum by(flow_verdict) (\n    count_over_time(\n        {namespace=\"$hubbleobservernamespace\",container=\"$container\"} |~ `(?i)$searchregex` !~ `(?i)$excluderegex`\n        | $logparser | flow_source_namespace=~\"$sourcenamespace\" | flow_destination_namespace=~\"$destinationnamespace\" | flow_traffic_direction=~\"$direction\" | flow_IP_ipVersion=~\"$ipversion\"\n        | flow_source_cluster_name=~\"$sourcecluster\" | flow_destination_cluster_name=~\"$destinationcluster\"\n    [$__range])\n)",
           "hide": false,
           "legendFormat": "{{flow_verdict}}",
           "queryType": "range",
@@ -415,7 +415,7 @@
           },
           "direction": "backward",
           "editorMode": "code",
-          "expr": "sum by(flow_traffic_direction) (\n    count_over_time(\n        {namespace=\"$hubbleobservernamespace\",container=\"hubble-observer\"} |~ `(?i)$searchregex` !~ `(?i)$excluderegex`\n        | $logparser | flow_source_namespace=~\"$sourcenamespace\" | flow_destination_namespace=~\"$destinationnamespace\" | flow_traffic_direction=~\"$direction\" | flow_IP_ipVersion=~\"$ipversion\"\n        | flow_source_cluster_name=~\"$sourcecluster\" | flow_destination_cluster_name=~\"$destinationcluster\"\n    [$__range])\n)",
+          "expr": "sum by(flow_traffic_direction) (\n    count_over_time(\n        {namespace=\"$hubbleobservernamespace\",container=\"$container\"} |~ `(?i)$searchregex` !~ `(?i)$excluderegex`\n        | $logparser | flow_source_namespace=~\"$sourcenamespace\" | flow_destination_namespace=~\"$destinationnamespace\" | flow_traffic_direction=~\"$direction\" | flow_IP_ipVersion=~\"$ipversion\"\n        | flow_source_cluster_name=~\"$sourcecluster\" | flow_destination_cluster_name=~\"$destinationcluster\"\n    [$__range])\n)",
           "hide": false,
           "legendFormat": "",
           "queryType": "instant",
@@ -495,7 +495,7 @@
           },
           "direction": "backward",
           "editorMode": "code",
-          "expr": "sum by(flow_source_namespace) (\n    count_over_time(\n        {namespace=\"$hubbleobservernamespace\",container=\"hubble-observer\"} |~ `(?i)$searchregex` !~ `(?i)$excluderegex`\n        | $logparser | flow_source_namespace!=\"\" | flow_source_namespace=~\"$sourcenamespace\" | flow_destination_namespace=~\"$destinationnamespace\" | flow_traffic_direction=~\"$direction\" | flow_IP_ipVersion=~\"$ipversion\"\n        | flow_source_cluster_name=~\"$sourcecluster\" | flow_destination_cluster_name=~\"$destinationcluster\"\n    [$__range])\n)",
+          "expr": "sum by(flow_source_namespace) (\n    count_over_time(\n        {namespace=\"$hubbleobservernamespace\",container=\"$container\"} |~ `(?i)$searchregex` !~ `(?i)$excluderegex`\n        | $logparser | flow_source_namespace!=\"\" | flow_source_namespace=~\"$sourcenamespace\" | flow_destination_namespace=~\"$destinationnamespace\" | flow_traffic_direction=~\"$direction\" | flow_IP_ipVersion=~\"$ipversion\"\n        | flow_source_cluster_name=~\"$sourcecluster\" | flow_destination_cluster_name=~\"$destinationcluster\"\n    [$__range])\n)",
           "hide": false,
           "legendFormat": "",
           "queryType": "instant",
@@ -575,7 +575,7 @@
           },
           "direction": "backward",
           "editorMode": "code",
-          "expr": "sum by(flow_destination_name) (\n    count_over_time(\n        {namespace=\"$hubbleobservernamespace\",container=\"hubble-observer\"} |~ `(?i)$searchregex` !~ `(?i)$excluderegex`\n        | $logparser | flow_source_namespace=~\"$sourcenamespace\" | flow_destination_namespace=~\"$destinationnamespace\" | flow_traffic_direction=~\"$direction\" | flow_IP_ipVersion=~\"$ipversion\" \n        | flow_source_cluster_name=~\"$sourcecluster\" | flow_destination_cluster_name=~\"$destinationcluster\"\n        | json flow_destination_name=\"flow.destination_names[0]\" | flow_destination_name!=\"\" \n    [$__range])\n)",
+          "expr": "sum by(flow_destination_name) (\n    count_over_time(\n        {namespace=\"$hubbleobservernamespace\",container=\"$container\"} |~ `(?i)$searchregex` !~ `(?i)$excluderegex`\n        | $logparser | flow_source_namespace=~\"$sourcenamespace\" | flow_destination_namespace=~\"$destinationnamespace\" | flow_traffic_direction=~\"$direction\" | flow_IP_ipVersion=~\"$ipversion\" \n        | flow_source_cluster_name=~\"$sourcecluster\" | flow_destination_cluster_name=~\"$destinationcluster\"\n        | json flow_destination_name=\"flow.destination_names[0]\" | flow_destination_name!=\"\" \n    [$__range])\n)",
           "hide": false,
           "legendFormat": "",
           "queryType": "instant",
@@ -645,7 +645,7 @@
           },
           "direction": "backward",
           "editorMode": "code",
-          "expr": "sum by(drop_reason) (\n    count_over_time(\n        {namespace=\"$hubbleobservernamespace\",container=\"hubble-observer\"} |~ `(?i)$searchregex` !~ `(?i)$excluderegex`\n        | $logparser | flow_verdict=\"DROPPED\" | flow_source_namespace=~\"$sourcenamespace\" | flow_destination_namespace=~\"$destinationnamespace\" | flow_traffic_direction=~\"$direction\" | flow_IP_ipVersion=~\"$ipversion\" | flow_source_cluster_name=~\"$sourcecluster\" | flow_destination_cluster_name=~\"$destinationcluster\"\n        | label_format drop_reason=\"{{ if .flow_drop_reason_desc }}{{ .flow_drop_reason_desc }}{{ else if .flow_l7_type }}L7 denied by the proxy ({{ .flow_l7_type }}){{ else }}DROP_REASON_UNKNOWN{{ end }}\"\n    [$__range])\n)",
+          "expr": "sum by(drop_reason) (\n    count_over_time(\n        {namespace=\"$hubbleobservernamespace\",container=\"$container\"} |~ `(?i)$searchregex` !~ `(?i)$excluderegex`\n        | $logparser | flow_verdict=\"DROPPED\" | flow_source_namespace=~\"$sourcenamespace\" | flow_destination_namespace=~\"$destinationnamespace\" | flow_traffic_direction=~\"$direction\" | flow_IP_ipVersion=~\"$ipversion\" | flow_source_cluster_name=~\"$sourcecluster\" | flow_destination_cluster_name=~\"$destinationcluster\"\n        | label_format drop_reason=\"{{ if .flow_drop_reason_desc }}{{ .flow_drop_reason_desc }}{{ else if .flow_l7_type }}L7 denied by the proxy ({{ .flow_l7_type }}){{ else }}DROP_REASON_UNKNOWN{{ end }}\"\n    [$__range])\n)",
           "hide": false,
           "legendFormat": "{{drop_reason}}",
           "queryType": "range",
@@ -716,7 +716,7 @@
           },
           "direction": "backward",
           "editorMode": "code",
-          "expr": "sum by(denied_by) (\n    count_over_time(\n        {namespace=\"$hubbleobservernamespace\",container=\"hubble-observer\"} |~ `(?i)$searchregex` !~ `(?i)$excluderegex`\n        | $logparser | flow_verdict=\"DROPPED\" | flow_drop_reason_desc=~\"^POLICY_DEN(Y|IED)$\" | flow_source_namespace=~\"$sourcenamespace\" | flow_destination_namespace=~\"$destinationnamespace\" | flow_traffic_direction=~\"$direction\" | flow_IP_ipVersion=~\"$ipversion\" | flow_source_cluster_name=~\"$sourcecluster\" | flow_destination_cluster_name=~\"$destinationcluster\" | json egress_denied=\"flow.egress_denied_by[0].name\", ingress_denied=\"flow.ingress_denied_by[0].name\"\n        | label_format denied_by=`{{ if .egress_denied }}{{ .egress_denied }}{{ else if .ingress_denied }}{{ .ingress_denied }}{{ else if eq .flow_drop_reason_desc \"POLICY_DENY\" }}explicit deny (policy name unavailable){{ else }}default deny (no matching allow){{ end }}`\n    [$__range])\n)",
+          "expr": "sum by(denied_by) (\n    count_over_time(\n        {namespace=\"$hubbleobservernamespace\",container=\"$container\"} |~ `(?i)$searchregex` !~ `(?i)$excluderegex`\n        | $logparser | flow_verdict=\"DROPPED\" | flow_drop_reason_desc=~\"^POLICY_DEN(Y|IED)$\" | flow_source_namespace=~\"$sourcenamespace\" | flow_destination_namespace=~\"$destinationnamespace\" | flow_traffic_direction=~\"$direction\" | flow_IP_ipVersion=~\"$ipversion\" | flow_source_cluster_name=~\"$sourcecluster\" | flow_destination_cluster_name=~\"$destinationcluster\" | json egress_denied=\"flow.egress_denied_by[0].name\", ingress_denied=\"flow.ingress_denied_by[0].name\"\n        | label_format denied_by=`{{ if .egress_denied }}{{ .egress_denied }}{{ else if .ingress_denied }}{{ .ingress_denied }}{{ else if eq .flow_drop_reason_desc \"POLICY_DENY\" }}explicit deny (policy name unavailable){{ else }}default deny (no matching allow){{ end }}`\n    [$__range])\n)",
           "hide": false,
           "legendFormat": "{{denied_by}}",
           "queryType": "range",
@@ -913,7 +913,7 @@
           },
           "direction": "backward",
           "editorMode": "code",
-          "expr": "sum by(flow_verdict) (\n    count_over_time(\n        {namespace=\"$hubbleobservernamespace\",container=\"hubble-observer\"} |~ `(?i)$searchregex` !~ `(?i)$excluderegex`\n        | $logparser | flow_source_namespace=~\"$sourcenamespace\" | flow_destination_namespace=~\"$destinationnamespace\" | flow_traffic_direction=~\"$direction\" | flow_IP_ipVersion=~\"$ipversion\"\n        | flow_source_cluster_name=~\"$sourcecluster\" | flow_destination_cluster_name=~\"$destinationcluster\"\n    [$__auto])\n)",
+          "expr": "sum by(flow_verdict) (\n    count_over_time(\n        {namespace=\"$hubbleobservernamespace\",container=\"$container\"} |~ `(?i)$searchregex` !~ `(?i)$excluderegex`\n        | $logparser | flow_source_namespace=~\"$sourcenamespace\" | flow_destination_namespace=~\"$destinationnamespace\" | flow_traffic_direction=~\"$direction\" | flow_IP_ipVersion=~\"$ipversion\"\n        | flow_source_cluster_name=~\"$sourcecluster\" | flow_destination_cluster_name=~\"$destinationcluster\"\n    [$__auto])\n)",
           "hide": false,
           "legendFormat": "{{flow_verdict}}",
           "queryType": "range",
@@ -1257,7 +1257,7 @@
           },
           "direction": "backward",
           "editorMode": "code",
-          "expr": "{namespace=\"$hubbleobservernamespace\",container=\"hubble-observer\"} |~ `(?i)$searchregex` !~ `(?i)$excluderegex`\n| $logparser \n| flow_source_namespace=~\"$sourcenamespace\" | flow_destination_namespace=~\"$destinationnamespace\" | flow_traffic_direction=~\"$direction\" | flow_IP_ipVersion=~\"$ipversion\" \n| flow_source_cluster_name=~\"$sourcecluster\" | flow_destination_cluster_name=~\"$destinationcluster\"\n| json flow_destination_name=\"flow.destination_names[0]\"\n| pattern `<_>\"source\":{<_>\"labels\":[<sourceLabels>]<_>}<_>,\"destination\":{<_>\"labels\":[<destinationLabels>]}<_>`\n| pattern `<_>\"k8s:job-name=<sourceJobName>\"<_>`\n| label_format \n    Verdict=`{{.flow_verdict}}`,\n    Source_IP=`{{.flow_IP_source}}`,\n    Source=`{{ if .flow_source_pod_name }}{{.flow_source_pod_name}} (Pod) {{else if .sourceJobName}} {{.sourceJobName}} (Job) {{else}} {{.sourceLabels}} (Label) {{end}}`,\n    Source_Namespace=`{{.flow_source_namespace}}`,\n    Direction=`{{.flow_traffic_direction}}`,\n    Dest_Port=`{{ if .flow_l4_TCP_destination_port}}TCP-{{.flow_l4_TCP_destination_port}}{{else if .flow_l4_UDP_destination_port}}UDP-{{.flow_l4_UDP_destination_port}}{{else if .flow_l4_ICMPv4_type}} ICMPv4 {{else}}{{end}}`, #\n    #Destination=`{{.flow_destination_name}}`,\n    Destination=`{{ if .flow_destination_pod_name }}{{.flow_destination_pod_name}} (Pod) {{ else if .flow_destination_name }}{{.flow_destination_name}} (URL){{else}} {{.destinationLabels}} (Label) {{end}}`,\n    #Destination_Pod=`{{.flow_destination_pod_name}}`,\n    Destination_Namespace=`{{.flow_destination_namespace}}`,\n    Destination_IP=`{{.flow_IP_destination}}`, \n    Drop_Description=`{{.flow_drop_reason_desc}}`,\n    Flow_UUID=`{{.flow_uuid}}`",
+          "expr": "{namespace=\"$hubbleobservernamespace\",container=\"$container\"} |~ `(?i)$searchregex` !~ `(?i)$excluderegex`\n| $logparser \n| flow_source_namespace=~\"$sourcenamespace\" | flow_destination_namespace=~\"$destinationnamespace\" | flow_traffic_direction=~\"$direction\" | flow_IP_ipVersion=~\"$ipversion\" \n| flow_source_cluster_name=~\"$sourcecluster\" | flow_destination_cluster_name=~\"$destinationcluster\"\n| json flow_destination_name=\"flow.destination_names[0]\"\n| pattern `<_>\"source\":{<_>\"labels\":[<sourceLabels>]<_>}<_>,\"destination\":{<_>\"labels\":[<destinationLabels>]}<_>`\n| pattern `<_>\"k8s:job-name=<sourceJobName>\"<_>`\n| label_format \n    Verdict=`{{.flow_verdict}}`,\n    Source_IP=`{{.flow_IP_source}}`,\n    Source=`{{ if .flow_source_pod_name }}{{.flow_source_pod_name}} (Pod) {{else if .sourceJobName}} {{.sourceJobName}} (Job) {{else}} {{.sourceLabels}} (Label) {{end}}`,\n    Source_Namespace=`{{.flow_source_namespace}}`,\n    Direction=`{{.flow_traffic_direction}}`,\n    Dest_Port=`{{ if .flow_l4_TCP_destination_port}}TCP-{{.flow_l4_TCP_destination_port}}{{else if .flow_l4_UDP_destination_port}}UDP-{{.flow_l4_UDP_destination_port}}{{else if .flow_l4_ICMPv4_type}} ICMPv4 {{else}}{{end}}`, #\n    #Destination=`{{.flow_destination_name}}`,\n    Destination=`{{ if .flow_destination_pod_name }}{{.flow_destination_pod_name}} (Pod) {{ else if .flow_destination_name }}{{.flow_destination_name}} (URL){{else}} {{.destinationLabels}} (Label) {{end}}`,\n    #Destination_Pod=`{{.flow_destination_pod_name}}`,\n    Destination_Namespace=`{{.flow_destination_namespace}}`,\n    Destination_IP=`{{.flow_IP_destination}}`, \n    Drop_Description=`{{.flow_drop_reason_desc}}`,\n    Flow_UUID=`{{.flow_uuid}}`",
           "maxLines": 100,
           "queryType": "range",
           "refId": "A"
@@ -1644,7 +1644,7 @@
               },
               "direction": "backward",
               "editorMode": "code",
-              "expr": "{namespace=\"$hubbleobservernamespace\",container=\"hubble-observer\"} |~ `(?i)$searchregex` !~ `(?i)$excluderegex`\n| $logparser \n| flow_source_namespace=~\"$sourcenamespace\" | flow_destination_namespace=~\"$destinationnamespace\" | flow_traffic_direction=~\"$direction\" | flow_IP_ipVersion=~\"$ipversion\" \n| flow_source_cluster_name=~\"$sourcecluster\" | flow_destination_cluster_name=~\"$destinationcluster\"\n| json flow_destination_name=\"flow.destination_names[0]\"\n| pattern `<_>\"source\":{<_>\"labels\":[<sourceLabels>]<_>}<_>,\"destination\":{<_>\"labels\":[<destinationLabels>]}<_>`\n| pattern `<_>\"k8s:job-name=<sourceJobName>\"<_>`\n| label_format \n    Verdict=`{{.flow_verdict}}`,\n    Source_IP=`{{.flow_IP_source}}`,\n    Source=`{{ if .flow_source_pod_name }}{{.flow_source_pod_name}} (Pod) {{else if .sourceJobName}} {{.sourceJobName}} (Job) {{else}} {{.sourceLabels}} (Label) {{end}}`,\n    Source_Namespace=`{{.flow_source_namespace}}`,\n    Direction=`{{.flow_traffic_direction}}`,\n    Dest_Port=`{{ if .flow_l4_TCP_destination_port}}TCP-{{.flow_l4_TCP_destination_port}}{{else if .flow_l4_UDP_destination_port}}UDP-{{.flow_l4_UDP_destination_port}}{{else if .flow_l4_ICMPv4_type}} ICMPv4 {{else}}{{end}}`, #\n    #Destination=`{{.flow_destination_name}}`,\n    Destination=`{{ if .flow_destination_pod_name }}{{.flow_destination_pod_name}} (Pod) {{ else if .flow_destination_name }}{{.flow_destination_name}} (URL){{else}} {{.destinationLabels}} (Label) {{end}}`,\n    #Destination_Pod=`{{.flow_destination_pod_name}}`,\n    Destination_Namespace=`{{.flow_destination_namespace}}`,\n    Destination_IP=`{{.flow_IP_destination}}`, \n    Drop_Description=`{{.flow_drop_reason_desc}}`,\n    Flow_UUID=`{{.flow_uuid}}`",
+              "expr": "{namespace=\"$hubbleobservernamespace\",container=\"$container\"} |~ `(?i)$searchregex` !~ `(?i)$excluderegex`\n| $logparser \n| flow_source_namespace=~\"$sourcenamespace\" | flow_destination_namespace=~\"$destinationnamespace\" | flow_traffic_direction=~\"$direction\" | flow_IP_ipVersion=~\"$ipversion\" \n| flow_source_cluster_name=~\"$sourcecluster\" | flow_destination_cluster_name=~\"$destinationcluster\"\n| json flow_destination_name=\"flow.destination_names[0]\"\n| pattern `<_>\"source\":{<_>\"labels\":[<sourceLabels>]<_>}<_>,\"destination\":{<_>\"labels\":[<destinationLabels>]}<_>`\n| pattern `<_>\"k8s:job-name=<sourceJobName>\"<_>`\n| label_format \n    Verdict=`{{.flow_verdict}}`,\n    Source_IP=`{{.flow_IP_source}}`,\n    Source=`{{ if .flow_source_pod_name }}{{.flow_source_pod_name}} (Pod) {{else if .sourceJobName}} {{.sourceJobName}} (Job) {{else}} {{.sourceLabels}} (Label) {{end}}`,\n    Source_Namespace=`{{.flow_source_namespace}}`,\n    Direction=`{{.flow_traffic_direction}}`,\n    Dest_Port=`{{ if .flow_l4_TCP_destination_port}}TCP-{{.flow_l4_TCP_destination_port}}{{else if .flow_l4_UDP_destination_port}}UDP-{{.flow_l4_UDP_destination_port}}{{else if .flow_l4_ICMPv4_type}} ICMPv4 {{else}}{{end}}`, #\n    #Destination=`{{.flow_destination_name}}`,\n    Destination=`{{ if .flow_destination_pod_name }}{{.flow_destination_pod_name}} (Pod) {{ else if .flow_destination_name }}{{.flow_destination_name}} (URL){{else}} {{.destinationLabels}} (Label) {{end}}`,\n    #Destination_Pod=`{{.flow_destination_pod_name}}`,\n    Destination_Namespace=`{{.flow_destination_namespace}}`,\n    Destination_IP=`{{.flow_IP_destination}}`, \n    Drop_Description=`{{.flow_drop_reason_desc}}`,\n    Flow_UUID=`{{.flow_uuid}}`",
               "maxLines": 100,
               "queryType": "range",
               "refId": "A"
@@ -1883,7 +1883,7 @@
               },
               "direction": "backward",
               "editorMode": "code",
-              "expr": "{namespace=\"$hubbleobservernamespace\",container=\"hubble-observer\"} |~ `(?i)$searchregex` !~ `(?i)$excluderegex`\n| $logparser \n| flow_traffic_direction=~\"$direction\" | flow_IP_ipVersion=~\"$ipversion\" | flow_source_cluster_name=~\"$sourcecluster\" | flow_destination_cluster_name=~\"$destinationcluster\"\n| json flow_destination_name=\"flow.destination_names[0]\"",
+              "expr": "{namespace=\"$hubbleobservernamespace\",container=\"$container\"} |~ `(?i)$searchregex` !~ `(?i)$excluderegex`\n| $logparser \n| flow_traffic_direction=~\"$direction\" | flow_IP_ipVersion=~\"$ipversion\" | flow_source_cluster_name=~\"$sourcecluster\" | flow_destination_cluster_name=~\"$destinationcluster\"\n| json flow_destination_name=\"flow.destination_names[0]\"",
               "legendFormat": "",
               "queryType": "range",
               "refId": "A"
@@ -2058,6 +2058,25 @@
             "selected": false
           }
         ]
+      },
+      {
+        "current": {
+          "text": "hubble-observer",
+          "value": "hubble-observer"
+        },
+        "description": "The observer's container name — the `container` label of its Loki stream. The chart's default is hubble-observer; a second release with its own containerName (examples/values-policy-verdicts.yaml) is viewed by setting this to that name.",
+        "hide": 0,
+        "label": "Container",
+        "name": "container",
+        "options": [
+          {
+            "selected": true,
+            "text": "hubble-observer",
+            "value": "hubble-observer"
+          }
+        ],
+        "query": "hubble-observer",
+        "type": "textbox"
       },
       {
         "current": {
