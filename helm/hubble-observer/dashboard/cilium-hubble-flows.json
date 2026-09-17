@@ -654,7 +654,7 @@
       ],
       "title": "Flows per Drop Reason",
       "type": "piechart",
-      "description": "Cilium's drop reason of each DROPPED flow (flow.drop_reason_desc): POLICY_DENIED = no rule allowed it, POLICY_DENY = an explicit deny rule, SERVICE_BACKEND_NOT_FOUND, … Only flows whose verdict is DROPPED count (the stream carries every verdict when verdictFilter is none). A flow denied by the L7 proxy carries no drop_reason_desc in its JSON (the enum's zero value, DROP_REASON_UNKNOWN, is omitted), so it is named here from its L7 record instead of appearing as an empty label."
+      "description": "Cilium's drop reason of each DROPPED flow (flow.drop_reason_desc): POLICY_DENIED = no rule allowed it, POLICY_DENY = an explicit deny rule, SERVICE_BACKEND_NOT_FOUND, \u2026 Only flows whose verdict is DROPPED count (the stream carries every verdict when verdictFilter is none). A flow denied by the L7 proxy carries no drop_reason_desc in its JSON (the enum's zero value, DROP_REASON_UNKNOWN, is omitted), so it is named here from its L7 record instead of appearing as an empty label."
     },
     {
       "datasource": {
@@ -725,7 +725,7 @@
       ],
       "title": "Policy drops by denying policy",
       "type": "piechart",
-      "description": "Only DROPPED flows whose reason is POLICY_DENIED or POLICY_DENY, by the policy Cilium's correlation names (flow.egress_denied_by[0].name or flow.ingress_denied_by[0].name — Loki's json parser skips arrays, so the element is read by JSON path). A POLICY_DENY with no name is an explicit deny whose name correlation did not supply; a POLICY_DENIED with no name is the default deny — no rule allowed the flow."
+      "description": "Only DROPPED flows whose reason is POLICY_DENIED or POLICY_DENY, by the policy Cilium's correlation names (flow.egress_denied_by[0].name or flow.ingress_denied_by[0].name \u2014 Loki's json parser skips arrays, so the element is read by JSON path). A POLICY_DENY with no name is an explicit deny whose name correlation did not supply; a POLICY_DENIED with no name is the default deny \u2014 no rule allowed the flow."
     },
     {
       "datasource": {
@@ -733,7 +733,7 @@
         "type": "loki",
         "uid": "${datasource}"
       },
-      "description": "One bar per interval ($__auto, at least 30s): how many flows the observer received in it, split by verdict — DROPPED only with the chart's default verdictFilter, every verdict when it is none. The same filters as the panels above (namespaces, direction, IP version, clusters, the regexes). A burst of red is a burst of drops; the History table below lists them.",
+      "description": "One bar per interval ($__auto, at least 30s): how many flows the observer received in it, split by verdict \u2014 DROPPED only with the chart's default verdictFilter, every verdict when it is none. The same filters as the panels above (namespaces, direction, IP version, clusters, the regexes). A burst of red is a burst of drops; the History table below lists them.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1257,7 +1257,7 @@
           },
           "direction": "backward",
           "editorMode": "code",
-          "expr": "{namespace=\"$hubbleobservernamespace\",container=\"$container\"} |~ `(?i)$searchregex` !~ `(?i)$excluderegex`\n| $logparser \n| flow_source_namespace=~\"$sourcenamespace\" | flow_destination_namespace=~\"$destinationnamespace\" | flow_traffic_direction=~\"$direction\" | flow_IP_ipVersion=~\"$ipversion\" \n| flow_source_cluster_name=~\"$sourcecluster\" | flow_destination_cluster_name=~\"$destinationcluster\"\n| json flow_destination_name=\"flow.destination_names[0]\"\n| pattern `<_>\"source\":{<_>\"labels\":[<sourceLabels>]<_>}<_>,\"destination\":{<_>\"labels\":[<destinationLabels>]}<_>`\n| pattern `<_>\"k8s:job-name=<sourceJobName>\"<_>`\n| label_format \n    Verdict=`{{.flow_verdict}}`,\n    Source_IP=`{{.flow_IP_source}}`,\n    Source=`{{ if .flow_source_pod_name }}{{.flow_source_pod_name}} (Pod) {{else if .sourceJobName}} {{.sourceJobName}} (Job) {{else}} {{.sourceLabels}} (Label) {{end}}`,\n    Source_Namespace=`{{.flow_source_namespace}}`,\n    Direction=`{{.flow_traffic_direction}}`,\n    Dest_Port=`{{ if .flow_l4_TCP_destination_port}}TCP-{{.flow_l4_TCP_destination_port}}{{else if .flow_l4_UDP_destination_port}}UDP-{{.flow_l4_UDP_destination_port}}{{else if .flow_l4_ICMPv4_type}} ICMPv4 {{else}}{{end}}`, #\n    #Destination=`{{.flow_destination_name}}`,\n    Destination=`{{ if .flow_destination_pod_name }}{{.flow_destination_pod_name}} (Pod) {{ else if .flow_destination_name }}{{.flow_destination_name}} (URL){{else}} {{.destinationLabels}} (Label) {{end}}`,\n    #Destination_Pod=`{{.flow_destination_pod_name}}`,\n    Destination_Namespace=`{{.flow_destination_namespace}}`,\n    Destination_IP=`{{.flow_IP_destination}}`, \n    Drop_Description=`{{.flow_drop_reason_desc}}`,\n    Flow_UUID=`{{.flow_uuid}}`",
+          "expr": "{namespace=\"$hubbleobservernamespace\",container=\"$container\"} |~ `(?i)$searchregex` !~ `(?i)$excluderegex`\n| $logparser \n| flow_source_namespace=~\"$sourcenamespace\" | flow_destination_namespace=~\"$destinationnamespace\" | flow_traffic_direction=~\"$direction\" | flow_IP_ipVersion=~\"$ipversion\" \n| flow_source_cluster_name=~\"$sourcecluster\" | flow_destination_cluster_name=~\"$destinationcluster\"\n| json flow_destination_name=\"flow.destination_names[0]\"\n| pattern `<_>\"source\":{<_>\"labels\":[<sourceLabels>]<_>}<_>,\"destination\":{<_>\"labels\":[<destinationLabels>]}<_>`\n| pattern `<_>\"k8s:job-name=<sourceJobName>\"<_>`\n| label_format \n    Verdict=`{{.flow_verdict}}`,\n    Source_IP=`{{.flow_IP_source}}`,\n    Source=`{{ if .flow_source_pod_name }}{{.flow_source_pod_name}} (Pod) {{else if .sourceJobName}} {{.sourceJobName}} (Job) {{else}} {{.sourceLabels}} (Label) {{end}}`,\n    Source_Namespace=`{{.flow_source_namespace}}`,\n    Source_Cluster=`{{.flow_source_cluster_name}}`,\n    Direction=`{{.flow_traffic_direction}}`,\n    Dest_Port=`{{ if .flow_l4_TCP_destination_port}}TCP-{{.flow_l4_TCP_destination_port}}{{else if .flow_l4_UDP_destination_port}}UDP-{{.flow_l4_UDP_destination_port}}{{else if .flow_l4_ICMPv4_type}} ICMPv4 {{else}}{{end}}`, #\n    #Destination=`{{.flow_destination_name}}`,\n    Destination=`{{ if .flow_destination_pod_name }}{{.flow_destination_pod_name}} (Pod) {{ else if .flow_destination_name }}{{.flow_destination_name}} (URL){{else}} {{.destinationLabels}} (Label) {{end}}`,\n    #Destination_Pod=`{{.flow_destination_pod_name}}`,\n    Destination_Namespace=`{{.flow_destination_namespace}}`,\n    Destination_Cluster=`{{.flow_destination_cluster_name}}`,\n    Destination_IP=`{{.flow_IP_destination}}`, \n    Drop_Description=`{{.flow_drop_reason_desc}}`,\n    Flow_UUID=`{{.flow_uuid}}`",
           "maxLines": 100,
           "queryType": "range",
           "refId": "A"
@@ -1290,7 +1290,9 @@
                 "Source",
                 "Source_IP",
                 "Source_Namespace",
-                "Verdict"
+                "Verdict",
+                "Source_Cluster",
+                "Destination_Cluster"
               ],
               "pattern": "^[A-Z].*"
             }
@@ -1346,18 +1348,20 @@
             },
             "includeByName": {},
             "indexByName": {
-              "Dest Port": 6,
-              "Destination": 7,
-              "Destination IP": 9,
-              "Destination Namespace": 8,
-              "Direction": 5,
-              "Drop Description": 10,
-              "Flow UUID": 11,
-              "Source": 3,
-              "Source IP": 2,
-              "Source Namespace": 4,
               "Time": 0,
-              "Verdict": 1
+              "Verdict": 1,
+              "Source IP": 2,
+              "Source": 3,
+              "Source Namespace": 4,
+              "Source Cluster": 5,
+              "Direction": 6,
+              "Dest Port": 7,
+              "Destination": 8,
+              "Destination Namespace": 9,
+              "Destination Cluster": 10,
+              "Destination IP": 11,
+              "Drop Description": 12,
+              "Flow UUID": 13
             },
             "renameByName": {
               "Dest Port": "Dest. Port",
@@ -1367,7 +1371,7 @@
               "flow_IP_source": "Source IP",
               "flow_Summary": "Summary",
               "flow_Type": "Type",
-              "flow_destination_cluster_name": "Source Cluster",
+              "flow_destination_cluster_name": "Destination Cluster",
               "flow_destination_identity": "",
               "flow_destination_name": "Destination",
               "flow_destination_namespace": "Destination Namespace",
@@ -2064,7 +2068,7 @@
           "text": "hubble-observer",
           "value": "hubble-observer"
         },
-        "description": "The observer's container name — the `container` label of its Loki stream. The chart's default is hubble-observer; a second release with its own containerName (examples/values-policy-verdicts.yaml) is viewed by setting this to that name.",
+        "description": "The observer's container name \u2014 the `container` label of its Loki stream. The chart's default is hubble-observer; a second release with its own containerName (examples/values-policy-verdicts.yaml) is viewed by setting this to that name.",
         "hide": 0,
         "label": "Container",
         "name": "container",
