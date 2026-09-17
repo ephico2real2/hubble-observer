@@ -185,7 +185,26 @@
         }
       ],
       "title": "Total Flows",
-      "type": "stat"
+      "type": "stat",
+      "description": "Count of flow lines the observer wrote to Loki in the time range, after the dashboard's filters. With verdictFilter=DROPPED (default) this is the number of dropped flows."
+    },
+    {
+      "type": "text",
+      "title": "",
+      "description": "",
+      "transparent": true,
+      "id": 17,
+      "gridPos": {
+        "h": 3,
+        "w": 4,
+        "x": 0,
+        "y": 8
+      },
+      "options": {
+        "mode": "markdown",
+        "content": "<!-- caption -->\n\n**Dropped flows** in the range \u2014 the observer streams `verdict=DROPPED` only (chart value `verdictFilter`)."
+      },
+      "pluginVersion": "12.3.2"
     },
     {
       "datasource": {
@@ -298,6 +317,126 @@
                 }
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "DROPPED"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "red"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "FORWARDED"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "green"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "AUDIT"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "yellow"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "REDIRECTED"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "blue"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "ERROR"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "purple"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TRACED"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TRANSLATED"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "UNKNOWN"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "text"
+                }
+              }
+            ]
           }
         ]
       },
@@ -346,7 +485,26 @@
         }
       ],
       "title": "Flows per Verdict",
-      "type": "piechart"
+      "type": "piechart",
+      "description": "Hubble verdict of each flow (flow.verdict): FORWARDED, DROPPED, AUDIT (would have been dropped, policy audit mode), REDIRECTED (to the L7 proxy), ERROR, TRACED. The observer's verdictFilter decides which verdicts reach Loki at all."
+    },
+    {
+      "type": "text",
+      "title": "",
+      "description": "",
+      "transparent": true,
+      "id": 18,
+      "gridPos": {
+        "h": 3,
+        "w": 5,
+        "x": 4,
+        "y": 8
+      },
+      "options": {
+        "mode": "markdown",
+        "content": "<!-- caption -->\n\n100 % DROPPED with the default filter; `verdictFilter: none` shows FORWARDED / AUDIT / REDIRECTED too."
+      },
+      "pluginVersion": "12.3.2"
     },
     {
       "datasource": {
@@ -376,7 +534,38 @@
           ],
           "mappings": []
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "INGRESS"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "blue"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "EGRESS"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "orange"
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 7,
@@ -397,7 +586,7 @@
             "lastNotNull"
           ],
           "fields": "",
-          "values": true
+          "values": false
         },
         "sort": "desc",
         "tooltip": {
@@ -417,13 +606,33 @@
           "editorMode": "code",
           "expr": "sum by(flow_traffic_direction) (\n    count_over_time(\n        {namespace=\"$hubbleobservernamespace\",container=\"$container\"} |~ `(?i)$searchregex` !~ `(?i)$excluderegex`\n        | $logparser | flow_source_namespace=~\"$sourcenamespace\" | flow_destination_namespace=~\"$destinationnamespace\" | flow_traffic_direction=~\"$direction\" | flow_IP_ipVersion=~\"$ipversion\"\n        | flow_source_cluster_name=~\"$sourcecluster\" | flow_destination_cluster_name=~\"$destinationcluster\"\n    [$__range])\n)",
           "hide": false,
-          "legendFormat": "",
-          "queryType": "instant",
-          "refId": "A"
+          "legendFormat": "{{flow_traffic_direction}}",
+          "queryType": "range",
+          "refId": "A",
+          "range": true
         }
       ],
       "title": "Flows per Direction",
-      "type": "piechart"
+      "type": "piechart",
+      "description": "flow.traffic_direction as Cilium saw the packet at the enforcement point: EGRESS = at the source endpoint, INGRESS = at the destination endpoint. For a drop it says whose policy decided."
+    },
+    {
+      "type": "text",
+      "title": "",
+      "description": "",
+      "transparent": true,
+      "id": 19,
+      "gridPos": {
+        "h": 3,
+        "w": 5,
+        "x": 9,
+        "y": 8
+      },
+      "options": {
+        "mode": "markdown",
+        "content": "<!-- caption -->\n\nWhose policy dropped it: **EGRESS** = at the source (its egress rules), **INGRESS** = at the destination (its ingress rules)."
+      },
+      "pluginVersion": "12.3.2"
     },
     {
       "datasource": {
@@ -434,8 +643,8 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "fixedColor": "blue",
-            "mode": "palette-classic"
+            "mode": "fixed",
+            "fixedColor": "semi-dark-blue"
           },
           "custom": {
             "hideFrom": {
@@ -451,7 +660,9 @@
               "url": "/d/${__dashboard.uid}/${__dashboard}?${__url_time_range}&${datasource:queryparam}&${container:queryparam}&${sourcecluster:queryparam}&${destinationcluster:queryparam}&${destinationnamespace:queryparam}&${ipversion:queryparam}&${searchregex:queryparam}&${excluderegex:queryparam}&${direction:queryparam}&var-sourcenamespace=${__data.fields.flow_source_namespace}"
             }
           ],
-          "mappings": []
+          "mappings": [],
+          "unit": "short",
+          "min": 0
         },
         "overrides": []
       },
@@ -459,31 +670,27 @@
         "h": 7,
         "w": 8,
         "x": 0,
-        "y": 8
+        "y": 11
       },
       "id": 7,
       "options": {
-        "legend": {
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true,
-          "values": [
-            "percent"
-          ]
-        },
-        "pieType": "donut",
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "valueMode": "text",
+        "showUnfilled": true,
+        "sizing": "auto",
+        "minVizHeight": 16,
+        "maxVizHeight": 32,
+        "namePlacement": "left",
         "reduceOptions": {
+          "values": true,
           "calcs": [
             "lastNotNull"
           ],
-          "fields": "",
-          "values": true
+          "fields": ""
         },
-        "sort": "desc",
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
+        "legend": {
+          "showLegend": false
         }
       },
       "pluginVersion": "12.3.2",
@@ -495,15 +702,46 @@
           },
           "direction": "backward",
           "editorMode": "code",
-          "expr": "sum by(flow_source_namespace) (\n    count_over_time(\n        {namespace=\"$hubbleobservernamespace\",container=\"$container\"} |~ `(?i)$searchregex` !~ `(?i)$excluderegex`\n        | $logparser | flow_source_namespace!=\"\" | flow_source_namespace=~\"$sourcenamespace\" | flow_destination_namespace=~\"$destinationnamespace\" | flow_traffic_direction=~\"$direction\" | flow_IP_ipVersion=~\"$ipversion\"\n        | flow_source_cluster_name=~\"$sourcecluster\" | flow_destination_cluster_name=~\"$destinationcluster\"\n    [$__range])\n)",
+          "expr": "topk(10, sum by(flow_source_namespace) (\n    count_over_time(\n        {namespace=\"$hubbleobservernamespace\",container=\"$container\"} |~ `(?i)$searchregex` !~ `(?i)$excluderegex`\n        | $logparser | flow_source_namespace!=\"\" | flow_source_namespace=~\"$sourcenamespace\" | flow_destination_namespace=~\"$destinationnamespace\" | flow_traffic_direction=~\"$direction\" | flow_IP_ipVersion=~\"$ipversion\"\n        | flow_source_cluster_name=~\"$sourcecluster\" | flow_destination_cluster_name=~\"$destinationcluster\"\n    [$__range])\n))",
           "hide": false,
-          "legendFormat": "",
           "queryType": "instant",
           "refId": "A"
         }
       ],
-      "title": "Flows per Source Namespace",
-      "type": "piechart"
+      "title": "Top dropped sources \u2014 by namespace",
+      "type": "bargauge",
+      "transformations": [
+        {
+          "id": "sortBy",
+          "options": {
+            "sort": [
+              {
+                "field": "Value #A",
+                "desc": true
+              }
+            ]
+          }
+        }
+      ],
+      "description": "topk(10) of dropped flows by flow.source.namespace. Sources without a namespace (host, world, remote-node, kube-apiserver identities) are filtered out by flow_source_namespace!=\"\"."
+    },
+    {
+      "type": "text",
+      "title": "",
+      "description": "",
+      "transparent": true,
+      "id": 21,
+      "gridPos": {
+        "h": 3,
+        "w": 8,
+        "x": 0,
+        "y": 18
+      },
+      "options": {
+        "mode": "markdown",
+        "content": "<!-- caption -->\n\nWho is being denied, ranked by dropped flows (top 10). Flows without a source namespace (host, world, remote-node identities) are excluded."
+      },
+      "pluginVersion": "12.3.2"
     },
     {
       "datasource": {
@@ -514,8 +752,8 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "fixedColor": "blue",
-            "mode": "palette-classic"
+            "mode": "fixed",
+            "fixedColor": "semi-dark-blue"
           },
           "custom": {
             "hideFrom": {
@@ -531,7 +769,9 @@
               "url": "/d/${__dashboard.uid}/${__dashboard}?${__url_time_range}&${datasource:queryparam}&${container:queryparam}&${sourcecluster:queryparam}&${destinationcluster:queryparam}&${destinationnamespace:queryparam}&${ipversion:queryparam}&${excluderegex:queryparam}&${direction:queryparam}&${sourcenamespace:queryparam}&var-searchregex=${__data.fields.flow_destination_name}"
             }
           ],
-          "mappings": []
+          "mappings": [],
+          "unit": "short",
+          "min": 0
         },
         "overrides": []
       },
@@ -543,27 +783,23 @@
       },
       "id": 6,
       "options": {
-        "legend": {
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true,
-          "values": [
-            "percent"
-          ]
-        },
-        "pieType": "donut",
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "valueMode": "text",
+        "showUnfilled": true,
+        "sizing": "auto",
+        "minVizHeight": 16,
+        "maxVizHeight": 32,
+        "namePlacement": "left",
         "reduceOptions": {
+          "values": true,
           "calcs": [
             "lastNotNull"
           ],
-          "fields": "",
-          "values": true
+          "fields": ""
         },
-        "sort": "desc",
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
+        "legend": {
+          "showLegend": false
         }
       },
       "pluginVersion": "12.3.2",
@@ -575,15 +811,46 @@
           },
           "direction": "backward",
           "editorMode": "code",
-          "expr": "sum by(flow_destination_name) (\n    count_over_time(\n        {namespace=\"$hubbleobservernamespace\",container=\"$container\"} |~ `(?i)$searchregex` !~ `(?i)$excluderegex`\n        | $logparser | flow_source_namespace=~\"$sourcenamespace\" | flow_destination_namespace=~\"$destinationnamespace\" | flow_traffic_direction=~\"$direction\" | flow_IP_ipVersion=~\"$ipversion\" \n        | flow_source_cluster_name=~\"$sourcecluster\" | flow_destination_cluster_name=~\"$destinationcluster\"\n        | json flow_destination_name=\"flow.destination_names[0]\" | flow_destination_name!=\"\" \n    [$__range])\n)",
+          "expr": "topk(10, sum by(flow_destination_name) (\n    count_over_time(\n        {namespace=\"$hubbleobservernamespace\",container=\"$container\"} |~ `(?i)$searchregex` !~ `(?i)$excluderegex`\n        | $logparser | flow_source_namespace=~\"$sourcenamespace\" | flow_destination_namespace=~\"$destinationnamespace\" | flow_traffic_direction=~\"$direction\" | flow_IP_ipVersion=~\"$ipversion\" \n        | flow_source_cluster_name=~\"$sourcecluster\" | flow_destination_cluster_name=~\"$destinationcluster\"\n        | json flow_destination_name=\"flow.destination_names[0]\" | flow_destination_name!=\"\" \n    [$__range])\n))",
           "hide": false,
-          "legendFormat": "",
           "queryType": "instant",
           "refId": "A"
         }
       ],
-      "title": "Flows per Destination",
-      "type": "piechart"
+      "title": "Top dropped destinations \u2014 by DNS name",
+      "type": "bargauge",
+      "transformations": [
+        {
+          "id": "sortBy",
+          "options": {
+            "sort": [
+              {
+                "field": "Value #A",
+                "desc": true
+              }
+            ]
+          }
+        }
+      ],
+      "description": "topk(10) of dropped flows by flow.destination_names[0] \u2014 the DNS name Cilium's DNS proxy recorded for the destination IP. A name is present only when the source is under an L7 DNS policy (rules.dns) so the proxy saw the lookup."
+    },
+    {
+      "type": "text",
+      "title": "",
+      "description": "",
+      "transparent": true,
+      "id": 20,
+      "gridPos": {
+        "h": 3,
+        "w": 10,
+        "x": 14,
+        "y": 8
+      },
+      "options": {
+        "mode": "markdown",
+        "content": "<!-- caption -->\n\nOnly flows whose destination IP was resolved through Cilium's DNS proxy carry a name (`destination_names`, an L7 DNS rule on the source). Empty = no DNS-visibility policy on the dropped sources."
+      },
+      "pluginVersion": "12.3.2"
     },
     {
       "datasource": {
@@ -606,13 +873,119 @@
           },
           "mappings": []
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "POLICY_DENIED"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "red"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "POLICY_DENY"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "dark-red"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "STALE_OR_UNROUTABLE_IP"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "orange"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "UNSUPPORTED_L3_PROTOCOL"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "DROP_REASON_UNKNOWN"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "^CT_.*"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "purple"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "^L7 denied.*"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "dark-purple"
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 7,
         "w": 8,
         "x": 8,
-        "y": 8
+        "y": 11
       },
       "id": 15,
       "options": {
@@ -657,6 +1030,24 @@
       "description": "Cilium's drop reason of each DROPPED flow (flow.drop_reason_desc): POLICY_DENIED = no rule allowed it, POLICY_DENY = an explicit deny rule, SERVICE_BACKEND_NOT_FOUND, \u2026 Only flows whose verdict is DROPPED count (the stream carries every verdict when verdictFilter is none). A flow denied by the L7 proxy carries no drop_reason_desc in its JSON (the enum's zero value, DROP_REASON_UNKNOWN, is omitted), so it is named here from its L7 record instead of appearing as an empty label."
     },
     {
+      "type": "text",
+      "title": "",
+      "description": "",
+      "transparent": true,
+      "id": 22,
+      "gridPos": {
+        "h": 3,
+        "w": 8,
+        "x": 8,
+        "y": 18
+      },
+      "options": {
+        "mode": "markdown",
+        "content": "<!-- caption -->\n\n**POLICY_DENIED** = no rule allowed it (default deny). **POLICY_DENY** = an explicit deny rule. **STALE_OR_UNROUTABLE_IP** = the destination IP is gone (a pod that no longer exists). Others: datapath, not policy."
+      },
+      "pluginVersion": "12.3.2"
+    },
+    {
       "datasource": {
         "default": false,
         "type": "loki",
@@ -677,13 +1068,44 @@
           },
           "mappings": []
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "default deny (no matching allow)"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "explicit deny (policy name unavailable)"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "dark-red"
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 7,
         "w": 8,
         "x": 16,
-        "y": 8
+        "y": 11
       },
       "id": 16,
       "options": {
@@ -726,6 +1148,24 @@
       "title": "Policy drops by denying policy",
       "type": "piechart",
       "description": "Only DROPPED flows whose reason is POLICY_DENIED or POLICY_DENY, by the policy Cilium's correlation names (flow.egress_denied_by[0].name or flow.ingress_denied_by[0].name \u2014 Loki's json parser skips arrays, so the element is read by JSON path). A POLICY_DENY with no name is an explicit deny whose name correlation did not supply; a POLICY_DENIED with no name is the default deny \u2014 no rule allowed the flow."
+    },
+    {
+      "type": "text",
+      "title": "",
+      "description": "",
+      "transparent": true,
+      "id": 23,
+      "gridPos": {
+        "h": 3,
+        "w": 8,
+        "x": 16,
+        "y": 18
+      },
+      "options": {
+        "mode": "markdown",
+        "content": "<!-- caption -->\n\nNames the deny rule from `egress_denied_by` / `ingress_denied_by`; a default-deny drop names none (gotcha #82), so it counts as \"default deny (no matching allow)\"."
+      },
+      "pluginVersion": "12.3.2"
     },
     {
       "datasource": {
@@ -880,6 +1320,126 @@
                 }
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "DROPPED"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "red"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "FORWARDED"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "green"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "AUDIT"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "yellow"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "REDIRECTED"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "blue"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "ERROR"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "purple"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TRACED"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TRANSLATED"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "text"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "UNKNOWN"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "text"
+                }
+              }
+            ]
           }
         ]
       },
@@ -887,7 +1447,7 @@
         "h": 6,
         "w": 24,
         "x": 0,
-        "y": 15
+        "y": 21
       },
       "id": 11,
       "interval": "30s",
@@ -924,12 +1484,30 @@
       "title": "Flows over time, by verdict"
     },
     {
+      "type": "text",
+      "title": "",
+      "description": "",
+      "transparent": true,
+      "id": 24,
+      "gridPos": {
+        "h": 2,
+        "w": 24,
+        "x": 0,
+        "y": 27
+      },
+      "options": {
+        "mode": "markdown",
+        "content": "<!-- caption -->\n\nDrops per 30 s. A step up at a moment = a policy took effect or a client started failing; a flat line at zero is the goal after enforcement."
+      },
+      "pluginVersion": "12.3.2"
+    },
+    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 21
+        "y": 29
       },
       "id": 4,
       "panels": [],
@@ -1234,7 +1812,7 @@
         "h": 15,
         "w": 24,
         "x": 0,
-        "y": 22
+        "y": 30
       },
       "id": 1,
       "options": {
@@ -1399,7 +1977,8 @@
           }
         }
       ],
-      "type": "table"
+      "type": "table",
+      "description": "Every dropped flow as a row: time, verdict, source and destination (pod, job or labels), namespaces, clusters, direction, destination port, drop reason, UUID. The Flow UUID column links to cf2cnp (Generate CiliumNetworkPolicy)."
     },
     {
       "collapsed": true,
@@ -1407,7 +1986,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 37
+        "y": 45
       },
       "id": 13,
       "panels": [
@@ -1630,7 +2209,7 @@
             "h": 15,
             "w": 24,
             "x": 0,
-            "y": 38
+            "y": 46
           },
           "id": 14,
           "options": {
@@ -1831,7 +2410,8 @@
               }
             }
           ],
-          "type": "table"
+          "type": "table",
+          "description": "The same rows deduplicated by the pattern of source, destination and port, so one recurring drop shows once."
         }
       ],
       "title": "Unique Flows",
@@ -1843,7 +2423,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 38
+        "y": 46
       },
       "id": 12,
       "panels": [
@@ -1853,7 +2433,7 @@
             "type": "loki",
             "uid": "${datasource}"
           },
-          "description": "",
+          "description": "The observer's JSON lines as written, one per dropped flow; the fields the fieldMask kept.",
           "fieldConfig": {
             "defaults": {},
             "overrides": []
@@ -1862,7 +2442,7 @@
             "h": 28,
             "w": 24,
             "x": 0,
-            "y": 39
+            "y": 47
           },
           "id": 3,
           "options": {
@@ -1893,7 +2473,7 @@
               "refId": "A"
             }
           ],
-          "title": "",
+          "title": "Raw flow lines",
           "type": "logs"
         }
       ],
