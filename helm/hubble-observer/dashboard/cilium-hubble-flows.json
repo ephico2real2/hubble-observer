@@ -195,14 +195,14 @@
       "transparent": true,
       "id": 17,
       "gridPos": {
-        "h": 2,
+        "h": 3,
         "w": 4,
         "x": 0,
         "y": 8
       },
       "options": {
         "mode": "markdown",
-        "content": "<!-- caption -->**Dropped flows** in the time range. The observer streams `verdict=DROPPED` only (chart value `verdictFilter`); every panel here counts drops, not traffic."
+        "content": "<!-- caption -->\n\n**Dropped flows** in the range \u2014 the observer streams `verdict=DROPPED` only (chart value `verdictFilter`)."
       },
       "pluginVersion": "12.3.2"
     },
@@ -495,14 +495,14 @@
       "transparent": true,
       "id": 18,
       "gridPos": {
-        "h": 2,
+        "h": 3,
         "w": 5,
         "x": 4,
         "y": 8
       },
       "options": {
         "mode": "markdown",
-        "content": "<!-- caption -->Always 100 % DROPPED with the default filter. Set `verdictFilter: none` to see FORWARDED / AUDIT / REDIRECTED too."
+        "content": "<!-- caption -->\n\n100 % DROPPED with the default filter; `verdictFilter: none` shows FORWARDED / AUDIT / REDIRECTED too."
       },
       "pluginVersion": "12.3.2"
     },
@@ -623,14 +623,14 @@
       "transparent": true,
       "id": 19,
       "gridPos": {
-        "h": 2,
+        "h": 3,
         "w": 5,
         "x": 9,
         "y": 8
       },
       "options": {
         "mode": "markdown",
-        "content": "<!-- caption -->Which side's policy dropped it: **EGRESS** = leaving the source (its egress rules or default-deny egress); **INGRESS** = arriving at the destination (its ingress rules)."
+        "content": "<!-- caption -->\n\nWhose policy dropped it: **EGRESS** = at the source (its egress rules), **INGRESS** = at the destination (its ingress rules)."
       },
       "pluginVersion": "12.3.2"
     },
@@ -643,7 +643,8 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "continuous-BlYlRd"
+            "mode": "fixed",
+            "fixedColor": "semi-dark-blue"
           },
           "custom": {
             "hideFrom": {
@@ -669,20 +670,20 @@
         "h": 7,
         "w": 8,
         "x": 0,
-        "y": 10
+        "y": 11
       },
       "id": 7,
       "options": {
         "displayMode": "gradient",
         "orientation": "horizontal",
-        "valueMode": "color",
+        "valueMode": "text",
         "showUnfilled": true,
         "sizing": "auto",
         "minVizHeight": 16,
         "maxVizHeight": 32,
         "namePlacement": "left",
         "reduceOptions": {
-          "values": false,
+          "values": true,
           "calcs": [
             "lastNotNull"
           ],
@@ -703,10 +704,8 @@
           "editorMode": "code",
           "expr": "topk(10, sum by(flow_source_namespace) (\n    count_over_time(\n        {namespace=\"$hubbleobservernamespace\",container=\"$container\"} |~ `(?i)$searchregex` !~ `(?i)$excluderegex`\n        | $logparser | flow_source_namespace!=\"\" | flow_source_namespace=~\"$sourcenamespace\" | flow_destination_namespace=~\"$destinationnamespace\" | flow_traffic_direction=~\"$direction\" | flow_IP_ipVersion=~\"$ipversion\"\n        | flow_source_cluster_name=~\"$sourcecluster\" | flow_destination_cluster_name=~\"$destinationcluster\"\n    [$__range])\n))",
           "hide": false,
-          "legendFormat": "{{flow_source_namespace}}",
-          "queryType": "range",
-          "refId": "A",
-          "range": true
+          "queryType": "instant",
+          "refId": "A"
         }
       ],
       "title": "Top dropped sources \u2014 by namespace",
@@ -717,7 +716,7 @@
           "options": {
             "sort": [
               {
-                "field": "Value",
+                "field": "Value #A",
                 "desc": true
               }
             ]
@@ -733,14 +732,14 @@
       "transparent": true,
       "id": 21,
       "gridPos": {
-        "h": 2,
+        "h": 3,
         "w": 8,
         "x": 0,
-        "y": 17
+        "y": 18
       },
       "options": {
         "mode": "markdown",
-        "content": "<!-- caption -->Who is being denied, ranked by dropped flows (top 10). Flows without a source namespace (host, world, remote-node identities) are excluded."
+        "content": "<!-- caption -->\n\nWho is being denied, ranked by dropped flows (top 10). Flows without a source namespace (host, world, remote-node identities) are excluded."
       },
       "pluginVersion": "12.3.2"
     },
@@ -753,7 +752,8 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "continuous-BlYlRd"
+            "mode": "fixed",
+            "fixedColor": "semi-dark-blue"
           },
           "custom": {
             "hideFrom": {
@@ -785,14 +785,14 @@
       "options": {
         "displayMode": "gradient",
         "orientation": "horizontal",
-        "valueMode": "color",
+        "valueMode": "text",
         "showUnfilled": true,
         "sizing": "auto",
         "minVizHeight": 16,
         "maxVizHeight": 32,
         "namePlacement": "left",
         "reduceOptions": {
-          "values": false,
+          "values": true,
           "calcs": [
             "lastNotNull"
           ],
@@ -813,10 +813,8 @@
           "editorMode": "code",
           "expr": "topk(10, sum by(flow_destination_name) (\n    count_over_time(\n        {namespace=\"$hubbleobservernamespace\",container=\"$container\"} |~ `(?i)$searchregex` !~ `(?i)$excluderegex`\n        | $logparser | flow_source_namespace=~\"$sourcenamespace\" | flow_destination_namespace=~\"$destinationnamespace\" | flow_traffic_direction=~\"$direction\" | flow_IP_ipVersion=~\"$ipversion\" \n        | flow_source_cluster_name=~\"$sourcecluster\" | flow_destination_cluster_name=~\"$destinationcluster\"\n        | json flow_destination_name=\"flow.destination_names[0]\" | flow_destination_name!=\"\" \n    [$__range])\n))",
           "hide": false,
-          "legendFormat": "{{flow_destination_name}}",
-          "queryType": "range",
-          "refId": "A",
-          "range": true
+          "queryType": "instant",
+          "refId": "A"
         }
       ],
       "title": "Top dropped destinations \u2014 by DNS name",
@@ -827,7 +825,7 @@
           "options": {
             "sort": [
               {
-                "field": "Value",
+                "field": "Value #A",
                 "desc": true
               }
             ]
@@ -843,14 +841,14 @@
       "transparent": true,
       "id": 20,
       "gridPos": {
-        "h": 2,
+        "h": 3,
         "w": 10,
         "x": 14,
         "y": 8
       },
       "options": {
         "mode": "markdown",
-        "content": "<!-- caption -->Only flows whose destination IP was resolved through Cilium's DNS proxy carry a name (`destination_names`, an L7 DNS rule on the source). Empty = no DNS-visibility policy on the dropped sources."
+        "content": "<!-- caption -->\n\nOnly flows whose destination IP was resolved through Cilium's DNS proxy carry a name (`destination_names`, an L7 DNS rule on the source). Empty = no DNS-visibility policy on the dropped sources."
       },
       "pluginVersion": "12.3.2"
     },
@@ -987,7 +985,7 @@
         "h": 7,
         "w": 8,
         "x": 8,
-        "y": 10
+        "y": 11
       },
       "id": 15,
       "options": {
@@ -1038,14 +1036,14 @@
       "transparent": true,
       "id": 22,
       "gridPos": {
-        "h": 2,
+        "h": 3,
         "w": 8,
         "x": 8,
-        "y": 17
+        "y": 18
       },
       "options": {
         "mode": "markdown",
-        "content": "<!-- caption -->**POLICY_DENIED** = no rule allowed it (default deny). **POLICY_DENY** = an explicit deny rule. **STALE_OR_UNROUTABLE_IP** = the destination IP is gone (a pod that no longer exists). Others: datapath, not policy."
+        "content": "<!-- caption -->\n\n**POLICY_DENIED** = no rule allowed it (default deny). **POLICY_DENY** = an explicit deny rule. **STALE_OR_UNROUTABLE_IP** = the destination IP is gone (a pod that no longer exists). Others: datapath, not policy."
       },
       "pluginVersion": "12.3.2"
     },
@@ -1107,7 +1105,7 @@
         "h": 7,
         "w": 8,
         "x": 16,
-        "y": 10
+        "y": 11
       },
       "id": 16,
       "options": {
@@ -1158,14 +1156,14 @@
       "transparent": true,
       "id": 23,
       "gridPos": {
-        "h": 2,
+        "h": 3,
         "w": 8,
         "x": 16,
-        "y": 17
+        "y": 18
       },
       "options": {
         "mode": "markdown",
-        "content": "<!-- caption -->Names the deny rule from `egress_denied_by` / `ingress_denied_by`; a default-deny drop names none (gotcha #82), so it counts as \"default deny (no matching allow)\"."
+        "content": "<!-- caption -->\n\nNames the deny rule from `egress_denied_by` / `ingress_denied_by`; a default-deny drop names none (gotcha #82), so it counts as \"default deny (no matching allow)\"."
       },
       "pluginVersion": "12.3.2"
     },
@@ -1449,7 +1447,7 @@
         "h": 6,
         "w": 24,
         "x": 0,
-        "y": 19
+        "y": 21
       },
       "id": 11,
       "interval": "30s",
@@ -1495,11 +1493,11 @@
         "h": 2,
         "w": 24,
         "x": 0,
-        "y": 25
+        "y": 27
       },
       "options": {
         "mode": "markdown",
-        "content": "<!-- caption -->Drops per 30 s. A step up at a moment = a policy took effect or a client started failing; a flat line at zero is the goal after enforcement."
+        "content": "<!-- caption -->\n\nDrops per 30 s. A step up at a moment = a policy took effect or a client started failing; a flat line at zero is the goal after enforcement."
       },
       "pluginVersion": "12.3.2"
     },
@@ -1509,7 +1507,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 27
+        "y": 29
       },
       "id": 4,
       "panels": [],
@@ -1814,7 +1812,7 @@
         "h": 15,
         "w": 24,
         "x": 0,
-        "y": 28
+        "y": 30
       },
       "id": 1,
       "options": {
@@ -1988,7 +1986,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 43
+        "y": 45
       },
       "id": 13,
       "panels": [
@@ -2211,7 +2209,7 @@
             "h": 15,
             "w": 24,
             "x": 0,
-            "y": 44
+            "y": 46
           },
           "id": 14,
           "options": {
@@ -2425,7 +2423,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 44
+        "y": 46
       },
       "id": 12,
       "panels": [
@@ -2444,7 +2442,7 @@
             "h": 28,
             "w": 24,
             "x": 0,
-            "y": 45
+            "y": 47
           },
           "id": 3,
           "options": {
