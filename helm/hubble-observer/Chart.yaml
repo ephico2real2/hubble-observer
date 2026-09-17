@@ -26,10 +26,12 @@ dependencies:
   # every policy's description from its rules; 0.7.0 consumes Cilium's own policy types (github.com/cilium/cilium
   # pkg/policy/api v1.20.1), validates with the agent's Sanitize plus the CRD, derives the DNS resolver rule from the
   # flows (kube-dns, the CoreDNS Helm chart, NodeLocal, OpenShift) with `dns.profile` / `dns.resolver` as a cluster
-  # default, writes fromCIDR for external sources, and adds `validate` and `version`. Upstream:
-  # oci://ghcr.io/onzack/helm-charts, version "*".
+  # default, writes fromCIDR for external sources, and adds `validate` and `version`; 0.8.0 the API page (Try it out,
+  # the version badge); 0.9.0 structured logging (log/slog, --log-format json|text, --log-level, a request id per line,
+  # every refusal logged with its reason) — the chart's deployment passes the two flags, so an older chart with the 0.9.0
+  # image logs in text. Upstream: oci://ghcr.io/onzack/helm-charts, version "*" (0.4.0 / binary 0.3.1 today).
   - name: cf2cnp
-    version: "0.7.0"
+    version: "0.9.0"
     repository: https://ephico2real2.github.io/cf2cnp
     condition: cf2cnp.enabled
   # Optional companion dashboard: Hubble / Policy Verdicts (Namespace) — audited / forwarded / dropped per namespace from
